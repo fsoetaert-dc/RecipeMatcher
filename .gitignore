@@ -23,6 +23,12 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+
 # .NET Core
 project.lock.json
 project.fragment.lock.json
