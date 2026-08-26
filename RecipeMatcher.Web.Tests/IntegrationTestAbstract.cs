@@ -15,6 +15,7 @@ public abstract class IntegrationTest : IDisposable
         Reader = factory.GetReader();
         Writer = factory.GetWriter();
 
+        factory.ResetDatabase();
     }
 
     public void Dispose()

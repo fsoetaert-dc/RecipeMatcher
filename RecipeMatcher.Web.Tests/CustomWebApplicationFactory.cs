@@ -18,8 +18,6 @@ public class CustomWebApplicationFactory
 
         builder.UseEnvironment("Testing");
 
-
-
         builder.ConfigureServices(services =>
         {
             connection = new SqliteConnection("DataSource=:memory:");
@@ -37,6 +35,18 @@ public class CustomWebApplicationFactory
             db.Database.EnsureCreated();
         });
     }
+
+    public void ResetDatabase()
+    {
+        using var scope = Services.CreateScope();
+
+        var db = scope.ServiceProvider
+            .GetRequiredService<AppDbContext>();
+
+        db.Database.EnsureDeletedAsync();
+        db.Database.EnsureCreatedAsync();
+    }
+
 
     protected override void Dispose(bool disposing)
     {
