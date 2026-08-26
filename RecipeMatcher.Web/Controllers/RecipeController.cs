@@ -21,4 +21,19 @@ public class RecipesController : Controller
 
         return View(recipes);
     }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Recipe recipe)
+    {
+        _dbContext.Recipes.Add(recipe);
+        await _dbContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 }
