@@ -53,4 +53,44 @@ public class RecipesController : Controller
 
         return View(recipe);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var recipe = await _dbContext.Recipes.FindAsync(id);
+
+        if (recipe == null)
+        {
+            return NotFound();
+        }
+
+        return View(recipe);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int id, Recipe recipe)
+    {
+        if (id != recipe.Id)
+        {
+            return NotFound();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(recipe);
+        }
+
+        var existingRecipe = await _dbContext.Recipes.FindAsync(id);
+
+        if (existingRecipe == null)
+        {
+            return NotFound();
+        }
+
+        existingRecipe.Name = recipe.Name;
+        existingRecipe.PreparationMinutes = recipe.PreparationMinutes;
+        await _dbContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 }
