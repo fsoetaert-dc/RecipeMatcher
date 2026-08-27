@@ -121,8 +121,7 @@ public class RecipesTests : IntegrationTest
             });
 
         var responseUpdate = await Client.PostAsync(
-            $"/recipes/Edit/{id}",
-            formData);
+            $"/recipes/Edit/{id}", formData);
 
         // Request the page again after the update
         var updatedResponse = await Client.GetAsync("/recipes");
@@ -151,5 +150,56 @@ public class RecipesTests : IntegrationTest
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
+    }
+
+    [Fact]
+    public async Task DeleteRecipeDeletesRecipeAndReturnsToRecipes()
+    {
+        Writer.Seed(db => db.Recipes.Add(
+            new Recipe
+            {
+                Id = 1,
+                Name = "Lasagna",
+                PreparationMinutes = 45
+            }));
+
+        var id = 1;
+        var response = await Client.GetAsync($"/recipes/Edit/{id}");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var formData = new FormUrlEncodedContent(
+            new Dictionary<string, string>
+            {
+                ["Id"] = id.ToString()
+            });
+
+        // Confirm deletion
+        var deleteResponse = await Client.PostAsync(
+            $"/recipes/Delete/{id}",
+            formData);
+
+        // The client may follow the redirect automatically,
+        // so the final response is usually OK.
+        Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+
+        var html = await deleteResponse.Content.ReadAsStringAsync();
+
+        Assert.DoesNotContain("Lasagna", html);
+    }
+
+    [Fact]
+    public async Task DeleteRecipeReturnsNotFoundWhenInvalidId()
+    {
+        Writer.Seed(db => db.Recipes.Add(
+            new Recipe
+            {
+                Id = 1,
+                Name = "Lasagna",
+                PreparationMinutes = 45
+            }));
+
+        var id = 12;
+        var response = await Client.GetAsync($"/recipes/Edit/{id}");
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }

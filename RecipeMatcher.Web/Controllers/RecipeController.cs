@@ -93,4 +93,33 @@ public class RecipesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> DeletePage(int id)
+    {
+        var recipe = await _dbContext.Recipes.FindAsync(id);
+
+        if (recipe == null)
+        {
+            return NotFound();
+        }
+
+        return View(recipe);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var recipe = await _dbContext.Recipes.FindAsync(id);
+
+        if (recipe == null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.Recipes.Remove(recipe);
+        await _dbContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
 }
