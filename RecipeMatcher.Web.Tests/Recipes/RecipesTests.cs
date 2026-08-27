@@ -44,9 +44,49 @@ public class RecipesTests : IntegrationTest
 
         var html = await response.Content.ReadAsStringAsync();
 
-        //should I test that the path is correct /recipes/create? Q for Mark
-
         Assert.Contains("The Name field is required.", html);
         Assert.Contains("Create", html);
+    }
+
+    [Fact]
+
+    public async Task GetDetailsAsyncReturnsOK()
+    {
+        Writer.Seed(db => db.Recipes.Add(
+            new Recipe
+            {
+                Id = 1,
+                Name = "Lasagna",
+                PreparationMinutes = 45
+            }));
+
+        var id =  1;
+        var response = await Client.GetAsync($"/recipes/Details/{id}");
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var html = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("Lasagna", html);
+        Assert.Contains("45", html);
+    }
+
+        [Fact]
+
+        public async Task GetDetailsAsyncReturnsNotFoundWhenIdDoesntExist()
+    {
+        Writer.Seed(db => db.Recipes.Add(
+            new Recipe
+            {
+                Id = 1,
+                Name = "Lasagna",
+                PreparationMinutes = 45
+            }));
+
+        var id =  15;
+        var response = await Client.GetAsync($"/recipes/Details/{id}");
+        
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
     }
 }

@@ -41,4 +41,16 @@ public class RecipesController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var recipe = await _dbContext.Recipes.FindAsync(id);
+
+        if (recipe is null)
+        {
+            return NotFound();
+        }
+
+        return View(recipe);
+    }
 }
