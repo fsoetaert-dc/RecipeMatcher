@@ -178,8 +178,7 @@ public class RecipesTests : IntegrationTest
             $"/recipes/Delete/{id}",
             formData);
 
-        // The client may follow the redirect automatically,
-        // so the final response is usually OK.
+        // The client may follow the redirect automatically, so the final response is usually OK.
         Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
 
         var html = await deleteResponse.Content.ReadAsStringAsync();
