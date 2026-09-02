@@ -12,4 +12,7 @@ public class Recipe
 
     [Range(1, 480)]
     public int PreparationMinutes { get; set; }
+
+    public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+    = new List<RecipeIngredient>();
 }

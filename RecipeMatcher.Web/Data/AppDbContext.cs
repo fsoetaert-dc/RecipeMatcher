@@ -16,5 +16,24 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.Entity<Ingredient>()
             .HasIndex(i => i.Name)
             .IsUnique();
+
+                modelBuilder.Entity<RecipeIngredient>()
+            .HasKey(ri => new
+            {
+                ri.RecipeId,
+                ri.IngredientId
+            });
+
+        modelBuilder.Entity<RecipeIngredient>()
+            .HasOne(ri => ri.Recipe)
+            .WithMany(r => r.RecipeIngredients)
+            .HasForeignKey(ri => ri.RecipeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<RecipeIngredient>()
+            .HasOne(ri => ri.Ingredient)
+            .WithMany(i => i.RecipeIngredients)
+            .HasForeignKey(ri => ri.IngredientId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
