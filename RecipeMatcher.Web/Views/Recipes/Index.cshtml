@@ -6,7 +6,9 @@
 
 <div class="text-center">
     <h1>Recipes</h1>
-
+    <a asp-controller="Recipes" asp-action="Create">
+        Add a recipe
+    </a>
     <ul>
         @foreach (var recipe in Model)
         {
