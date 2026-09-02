@@ -44,7 +44,10 @@ public class RecipesController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var recipe = await _dbContext.Recipes.FindAsync(id);
+        var recipe = await _dbContext.Recipes
+            .Include(r => r.RecipeIngredients)
+            .ThenInclude(ri => ri.Ingredient)
+            .FirstOrDefaultAsync(r => r.Id == id);
 
         if (recipe is null)
         {
