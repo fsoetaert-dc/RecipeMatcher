@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using RecipeMatcher.Web.Data;
 using RecipeMatcher.Web.Models;
 
@@ -60,27 +61,48 @@ public class RecipesController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var recipe = await _dbContext.Recipes.FindAsync(id);
+        var recipe = await _dbContext.Recipes.Include(r => r.RecipeIngredients).SingleOrDefaultAsync(r => r.Id == id);
 
         if (recipe == null)
         {
             return NotFound();
         }
 
-        return View(recipe);
+        var selectedIngredientIds = recipe.RecipeIngredients
+            .Select(ri => ri.IngredientId)
+            .ToList();
+
+        var ingredients = await _dbContext.Ingredients
+            .OrderBy(i => i.Name)
+            .Select(i => new IngredientOptionViewModel
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Selected = selectedIngredientIds.Contains(i.Id)
+            })
+            .ToListAsync();
+
+        var model = new EditRecipeViewModel
+        {
+            Id = recipe.Id,
+            Name = recipe.Name,
+            PreparationMinutes = recipe.PreparationMinutes,
+            Ingredients = ingredients
+        };
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, Recipe recipe)
+    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel)
     {
-        if (id != recipe.Id)
+        if (id != editRecipeViewModel.Id)
         {
             return NotFound();
         }
 
         if (!ModelState.IsValid)
         {
-            return View(recipe);
+            return View(editRecipeViewModel);
         }
 
         var existingRecipe = await _dbContext.Recipes.FindAsync(id);
@@ -90,8 +112,32 @@ public class RecipesController : Controller
             return NotFound();
         }
 
-        existingRecipe.Name = recipe.Name;
-        existingRecipe.PreparationMinutes = recipe.PreparationMinutes;
+        existingRecipe.Name = editRecipeViewModel.Name;
+        existingRecipe.PreparationMinutes = editRecipeViewModel.PreparationMinutes;
+
+        foreach (var ingredient in editRecipeViewModel.Ingredients)
+        {
+            if (ingredient.Selected == true)
+            {
+                existingRecipe.RecipeIngredients.Add(
+                    new RecipeIngredient
+                    {
+                        RecipeId = id,
+                        Recipe = existingRecipe,
+                        IngredientId = ingredient.Id,
+                    }
+                );
+            }
+            else
+            {
+                var unselectedIngredient = await _dbContext.Ingredients.FindAsync(ingredient.Id);
+                var unselectedRecipeIngredient = existingRecipe.RecipeIngredients.Single(ri => ri.IngredientId == unselectedIngredient?.Id);
+                if (existingRecipe.RecipeIngredients.Contains(unselectedRecipeIngredient))
+                {
+                    existingRecipe.RecipeIngredients.Remove(unselectedRecipeIngredient);
+                }
+            }
+        }
         await _dbContext.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));

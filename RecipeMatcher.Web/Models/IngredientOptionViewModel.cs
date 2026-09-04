@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using RecipeMatcher.Web.Models;
 
 public class IngredientOptionViewModel
 {

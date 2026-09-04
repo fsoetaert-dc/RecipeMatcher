@@ -4,4 +4,9 @@
 <div class="text-center">
     <h1>@Model.Name</h1>
     <li>Preparation time: @Model.PreparationMinutes minutes</li>
+    @foreach (var recipeIngredient in Model.RecipeIngredients)
+    {
+        <li>recipeIngredient.name</li>
+    }
+
 </div>
