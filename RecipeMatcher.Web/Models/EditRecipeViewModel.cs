@@ -11,5 +11,5 @@ public class EditRecipeViewModel
     [Range(1, 480)]
     public int PreparationMinutes { get; set; }
 
-    public IReadOnlyList<IngredientOptionViewModel> Ingredients { get; set; } = [];
+    public List<IngredientOptionViewModel> Ingredients { get; set; } = [];
 }

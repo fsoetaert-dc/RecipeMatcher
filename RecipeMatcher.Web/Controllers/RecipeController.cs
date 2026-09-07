@@ -93,9 +93,9 @@ public class RecipesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel)
+    public async Task<IActionResult> Edit(int recipeId, EditRecipeViewModel editRecipeViewModel)
     {
-        if (id != editRecipeViewModel.Id)
+        if (recipeId != editRecipeViewModel.Id)
         {
             return NotFound();
         }
@@ -105,39 +105,35 @@ public class RecipesController : Controller
             return View(editRecipeViewModel);
         }
 
-        var existingRecipe = await _dbContext.Recipes.FindAsync(id);
+        var existingRecipe = await _dbContext.Recipes.Include(r => r.RecipeIngredients).SingleOrDefaultAsync(r => r.Id == recipeId);
 
         if (existingRecipe == null)
         {
             return NotFound();
         }
+        
+        var IngredientsIds = new List<int>();
+        foreach (var ingredientOptionModel in editRecipeViewModel.Ingredients)
+        {
+            if (ingredientOptionModel.Selected == true)
+            { IngredientsIds.Add(ingredientOptionModel.Id); }
+        }
 
         existingRecipe.Name = editRecipeViewModel.Name;
         existingRecipe.PreparationMinutes = editRecipeViewModel.PreparationMinutes;
 
-        foreach (var ingredient in editRecipeViewModel.Ingredients)
+        existingRecipe.RecipeIngredients.Clear();
+
+        foreach (var ingredientId in IngredientsIds)
         {
-            if (ingredient.Selected == true)
+            var ri = new RecipeIngredient
             {
-                existingRecipe.RecipeIngredients.Add(
-                    new RecipeIngredient
-                    {
-                        RecipeId = id,
-                        Recipe = existingRecipe,
-                        IngredientId = ingredient.Id,
-                    }
-                );
-            }
-            else
-            {
-                var unselectedIngredient = await _dbContext.Ingredients.FindAsync(ingredient.Id);
-                var unselectedRecipeIngredient = existingRecipe.RecipeIngredients.Single(ri => ri.IngredientId == unselectedIngredient?.Id);
-                if (existingRecipe.RecipeIngredients.Contains(unselectedRecipeIngredient))
-                {
-                    existingRecipe.RecipeIngredients.Remove(unselectedRecipeIngredient);
-                }
-            }
+                RecipeId = recipeId,
+                IngredientId = ingredientId
+            };
+            existingRecipe.RecipeIngredients.Add(ri);
         }
+
         await _dbContext.SaveChangesAsync();
 
         return RedirectToAction(nameof(Index));

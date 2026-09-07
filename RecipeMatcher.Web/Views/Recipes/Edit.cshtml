@@ -1,7 +1,11 @@
 @model EditRecipeViewModel
 
-<form asp-action="Edit" method="POST">
-    <div asp-validation-summary="ModelOnly"></div>
+<form asp-action="Edit" asp-route-recipeId="@Model.Id" method="POST">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="All"></div>
+
     <label asp-for="Name"></label>
     <input asp-for="Name" />
     <span asp-validation-for="Name"></span>
@@ -10,20 +14,26 @@
     <input asp-for="PreparationMinutes" />
     <span asp-validation-for="PreparationMinutes"></span>
 
+
     <h3>Ingredients</h3>
-    @foreach (var ingredient in Model.Ingredients)
-    {
-        <li>
-            <input type="checkbox"  value="@ingredient.Id" checked="@ingredient.Selected"
-            asp-for="@ingredient.Selected" />
+    <ul>
+        @for (var i = 0; i < Model.Ingredients.Count; i++)
+        {
+            <li>
+                <input type="hidden" asp-for="Ingredients[i].Id" />
 
-            <label value= asp-for="@ingredient.Selected">
-                @ingredient.Name
-            </label>
-        </li>
-    }
+                <input type="hidden" asp-for="Ingredients[i].Name" />
 
-    <button type="submit">Edit</button>
+                <input asp-for="Ingredients[i].Selected" />
+
+                <label asp-for="Ingredients[i].Selected">
+                    @Model.Ingredients[i].Name
+                </label>
+            </li>
+        }
+    </ul>
+
+    <button type="submit">Save</button>
 </form>
 
 @section Scripts {
