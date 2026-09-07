@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Net;
 using System.Net.Http.Json;
 using RecipeMatcher.Web.Models;
@@ -93,17 +94,21 @@ public class RecipesTests : IntegrationTest
     [Fact]
     public async Task EditRecipeAsyncUpdatesRecipe()
     {
-
-        Writer.Seed(db => db.Recipes.Add(
-            new Recipe
+        var r1 =new Recipe
             {
-                Id = 1,
                 Name = "Lasagna",
                 PreparationMinutes = 45
-            }));
+            };
 
-        var id = 1;
-        var response = await Client.GetAsync($"/recipes/Edit/{id}");
+        Writer.Seed(db =>
+        {
+            db.Recipes.Add(r1);
+
+            db.SaveChanges();
+        });
+
+        var id = r1.Id;
+        var response = await Client.GetAsync($"/Recipes/Edit/{id}");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -115,13 +120,20 @@ public class RecipesTests : IntegrationTest
         var formData = new FormUrlEncodedContent(
             new Dictionary<string, string>
             {
-                ["Id"] = "1",
+                ["Id"] = r1.Id.ToString(),
                 ["Name"] = "Vegetable Lasagna",
                 ["PreparationMinutes"] = "55"
             });
 
         var responseUpdate = await Client.PostAsync(
-            $"/recipes/Edit/{id}", formData);
+            $"/Recipes/Edit/{id}", formData);
+
+        var updateContent = await responseUpdate.Content.ReadAsStringAsync();
+
+        Assert.True(
+            responseUpdate.IsSuccessStatusCode,
+            $"POST gaf {(int)responseUpdate.StatusCode} " +
+            $"{responseUpdate.StatusCode} terug.\n{updateContent}");
 
         // Request the page again after the update
         var updatedResponse = await Client.GetAsync("/recipes");

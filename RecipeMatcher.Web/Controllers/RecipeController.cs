@@ -93,9 +93,9 @@ public class RecipesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int recipeId, EditRecipeViewModel editRecipeViewModel)
+    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel)
     {
-        if (recipeId != editRecipeViewModel.Id)
+        if (id != editRecipeViewModel.Id)
         {
             return NotFound();
         }
@@ -105,13 +105,13 @@ public class RecipesController : Controller
             return View(editRecipeViewModel);
         }
 
-        var existingRecipe = await _dbContext.Recipes.Include(r => r.RecipeIngredients).SingleOrDefaultAsync(r => r.Id == recipeId);
+        var existingRecipe = await _dbContext.Recipes.Include(r => r.RecipeIngredients).SingleOrDefaultAsync(r => r.Id == id);
 
         if (existingRecipe == null)
         {
             return NotFound();
         }
-        
+
         var IngredientsIds = new List<int>();
         foreach (var ingredientOptionModel in editRecipeViewModel.Ingredients)
         {
@@ -128,7 +128,7 @@ public class RecipesController : Controller
         {
             var ri = new RecipeIngredient
             {
-                RecipeId = recipeId,
+                RecipeId = id,
                 IngredientId = ingredientId
             };
             existingRecipe.RecipeIngredients.Add(ri);
