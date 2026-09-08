@@ -1,0 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
+public class MatcherViewModel
+{
+    public int Id { get; set; }
+
+    [Required]
+    [StringLength(100)]
+    public string Name { get; set; } = "";
+
+    public bool Selected { get; set; } = false;
+}

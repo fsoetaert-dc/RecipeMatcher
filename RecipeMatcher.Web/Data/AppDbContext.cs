@@ -17,7 +17,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasIndex(i => i.Name)
             .IsUnique();
 
-                modelBuilder.Entity<RecipeIngredient>()
+        modelBuilder.Entity<RecipeIngredient>()
             .HasKey(ri => new
             {
                 ri.RecipeId,
