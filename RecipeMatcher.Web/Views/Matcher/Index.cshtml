@@ -1,16 +1,19 @@
 @using Microsoft.Extensions.FileSystemGlobbing
 @model List<MatcherViewModel>
 Matcher<h3>Choose your available Ingredients</h3>
-    <ul>
-    @foreach (var ingredient in @Model)
-    {
-        <input type="hidden" asp-for="@ingredient.Id" />
+    <form asp-action="MatchRecipe" asp-action="Search" method="POST">
+        <ul>
+        @foreach (var ingredient in @Model)
+        {
+            <input type="checkbox" 
+            name="ingredientIds" 
+            value="@ingredient.Id"
+            />
 
-        <input type="hidden" asp-for="@ingredient.Name" />
-
-        <input asp-for="@ingredient.Selected" />
-
-        <label asp-for="@ingredient.Selected">@ingredient.Name
-                </label>
-    }           
-    </ul>
+            <label>
+                @ingredient.Name
+            </label>
+        }           
+        </ul>
+        <button type="submit">Search</button>
+    </form>

@@ -29,4 +29,12 @@ public class MatcherController : Controller
 
         return View(ingredients);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Search(int[]? ingredientIds)
+    {
+        
+
+        return View();
+    }
 }
