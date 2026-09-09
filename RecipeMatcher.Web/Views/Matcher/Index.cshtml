@@ -1,7 +1,7 @@
 @using Microsoft.Extensions.FileSystemGlobbing
-@model List<MatcherViewModel>
+@model List<SelectIngredientsViewModel>
 Matcher<h3>Choose your available Ingredients</h3>
-    <form asp-action="MatchRecipe" asp-action="Search" method="POST">
+    <form asp-action="Index" method="POST">
         <ul>
         @foreach (var ingredient in @Model)
         {

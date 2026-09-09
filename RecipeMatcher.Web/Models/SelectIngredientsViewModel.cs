@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-public class MatcherViewModel
+public class SelectIngredientsViewModel
 {
     public int Id { get; set; }
 

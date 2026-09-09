@@ -113,10 +113,10 @@ public class RecipesController : Controller
         }
 
         var IngredientsIds = new List<int>();
-        foreach (var ingredientOptionModel in editRecipeViewModel.Ingredients)
+        foreach (var ingredientOptionViewModel in editRecipeViewModel.Ingredients)
         {
-            if (ingredientOptionModel.Selected == true)
-            { IngredientsIds.Add(ingredientOptionModel.Id); }
+            if (ingredientOptionViewModel.Selected == true)
+            { IngredientsIds.Add(ingredientOptionViewModel.Id); }
         }
 
         existingRecipe.Name = editRecipeViewModel.Name;

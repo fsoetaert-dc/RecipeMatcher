@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeMatcher.Web.Data;
@@ -20,7 +21,7 @@ public class MatcherController : Controller
     {
         var ingredients = await _dbContext.Ingredients
             .OrderBy(i => i.Name)
-            .Select(i => new MatcherViewModel
+            .Select(i => new SelectIngredientsViewModel
             {
                 Id = i.Id,
                 Name = i.Name
@@ -31,9 +32,9 @@ public class MatcherController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Search(int[]? ingredientIds)
+    public async Task<IActionResult> Index(int[]? ingredientIds)
     {
-        
+        var recipes = await _dbContext.Recipes.ToListAsync();
 
         return View();
     }

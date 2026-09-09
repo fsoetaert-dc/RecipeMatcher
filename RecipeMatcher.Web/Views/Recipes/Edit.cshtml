@@ -1,33 +1,30 @@
 @model EditRecipeViewModel
 
-<form asp-action="Edit" asp-route-recipeId="@Model.Id" method="POST">
+<form asp-action="Edit" asp-route-Id="@Model.Id" method="POST">
 
     <input type="hidden" asp-for="Id" />
 
     <div asp-validation-summary="All"></div>
 
     <label asp-for="Name"></label>
-    <input asp-for="Name" />
+    <input type= "text" asp-for="Name" />
     <span asp-validation-for="Name"></span>
 
     <label asp-for="PreparationMinutes"></label>
-    <input asp-for="PreparationMinutes" />
+    <input type="number" asp-for="PreparationMinutes" />
     <span asp-validation-for="PreparationMinutes"></span>
 
 
     <h3>Ingredients</h3>
     <ul>
-        @for (var i = 0; i < Model.Ingredients.Count; i++)
+        @foreach (var ingredient in Model.Ingredients)
         {
             <li>
-                <input type="hidden" asp-for="Ingredients[i].Id" />
 
-                <input type="hidden" asp-for="Ingredients[i].Name" />
+                <input type="checkbox" asp-for="@ingredient.Selected" />
 
-                <input asp-for="Ingredients[i].Selected" />
-
-                <label asp-for="Ingredients[i].Selected">
-                    @Model.Ingredients[i].Name
+                <label asp-for="@ingredient.Selected">
+                    @ingredient.Name 
                 </label>
             </li>
         }
