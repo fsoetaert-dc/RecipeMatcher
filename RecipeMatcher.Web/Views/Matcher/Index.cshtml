@@ -1,19 +1,19 @@
 @using Microsoft.Extensions.FileSystemGlobbing
 @model List<SelectIngredientsViewModel>
 Matcher<h3>Choose your available Ingredients</h3>
-    <form asp-action="Index" method="POST">
-        <ul>
+<form asp-action="Index" method="GET">
+    <ul>
         @foreach (var ingredient in @Model)
         {
-            <input type="checkbox" 
-            name="ingredientIds" 
-            value="@ingredient.Id"
-            />
+            <li>
+                <input type="checkbox" name="ingredientIds" value="@ingredient.Id" checked="@ingredient.Selected" />
 
-            <label>
-                @ingredient.Name
-            </label>
-        }           
-        </ul>
-        <button type="submit">Search</button>
-    </form>
+                <label>
+                    @ingredient.Name
+                </label>
+            </li>
+        }
+    </ul>
+    <button type="submit">Search</button>
+</form>
+

@@ -93,7 +93,7 @@ public class RecipesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel, int[] ingredientsIds)
+    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel, int[] ingredientIds)
     {
         if (id != editRecipeViewModel.Id)
         {
@@ -105,7 +105,9 @@ public class RecipesController : Controller
             return View(editRecipeViewModel);
         }
 
-        var existingRecipe = await _dbContext.Recipes.Include(r => r.RecipeIngredients).SingleOrDefaultAsync(r => r.Id == id);
+        var existingRecipe = await _dbContext.Recipes
+        .Include(r => r.RecipeIngredients)
+        .SingleOrDefaultAsync(r => r.Id == id);
 
         if (existingRecipe == null)
         {
@@ -117,7 +119,7 @@ public class RecipesController : Controller
 
         existingRecipe.RecipeIngredients.Clear();
 
-        foreach (var ingredientId in ingredientsIds)
+        foreach (var ingredientId in ingredientIds)
         {
             var ri = new RecipeIngredient
             {

@@ -34,8 +34,17 @@ public class MatcherController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(int[]? ingredientIds)
     {
-        var recipes = await _dbContext.Recipes.ToListAsync();
+        if (ingredientIds == null)
+        {
+            return BadRequest();
+        }
 
-        return View();
+        var recipes = await _dbContext.Recipes
+            .Select(r => r.RecipeIngredients
+                .Any(ri => ingredientIds
+                    .Contains(ri.IngredientId)))
+            .ToListAsync();
+
+        return View(recipes);
     }
 }

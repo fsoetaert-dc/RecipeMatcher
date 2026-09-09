@@ -20,7 +20,10 @@
         @foreach (var ingredient in Model.Ingredients)
         {
             <li>
-                <input type="checkbox" name="ingredientIds" value="@ingredient.Id" checked="@ingredient.Selected" />
+                <input type="checkbox" 
+                name="ingredientIds" 
+                value="@ingredient.Id" 
+                checked="@ingredient.Selected" />
 
                 <label asp-for="@ingredient.Selected">
                     @ingredient.Name 
