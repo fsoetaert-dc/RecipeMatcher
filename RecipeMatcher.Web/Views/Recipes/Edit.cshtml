@@ -2,16 +2,16 @@
 
 <form asp-action="Edit" asp-route-Id="@Model.Id" method="POST">
 
-    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="@Model.Id" />
 
     <div asp-validation-summary="All"></div>
 
     <label asp-for="Name"></label>
-    <input type= "text" asp-for="Name" />
+    <input type= "text" asp-for="@Model.Name" />
     <span asp-validation-for="Name"></span>
 
     <label asp-for="PreparationMinutes"></label>
-    <input type="number" asp-for="PreparationMinutes" />
+    <input type="number" asp-for="@Model.PreparationMinutes" />
     <span asp-validation-for="PreparationMinutes"></span>
 
 
@@ -20,8 +20,7 @@
         @foreach (var ingredient in Model.Ingredients)
         {
             <li>
-
-                <input type="checkbox" asp-for="@ingredient.Selected" />
+                <input type="checkbox" name="ingredientIds" value="@ingredient.Id" checked="@ingredient.Selected" />
 
                 <label asp-for="@ingredient.Selected">
                     @ingredient.Name 

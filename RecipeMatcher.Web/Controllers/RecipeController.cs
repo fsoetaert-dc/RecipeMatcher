@@ -93,11 +93,11 @@ public class RecipesController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel)
+    public async Task<IActionResult> Edit(int id, EditRecipeViewModel editRecipeViewModel, int[] ingredientsIds)
     {
         if (id != editRecipeViewModel.Id)
         {
-            return NotFound();
+            return BadRequest();
         }
 
         if (!ModelState.IsValid)
@@ -112,19 +112,12 @@ public class RecipesController : Controller
             return NotFound();
         }
 
-        var IngredientsIds = new List<int>();
-        foreach (var ingredientOptionViewModel in editRecipeViewModel.Ingredients)
-        {
-            if (ingredientOptionViewModel.Selected == true)
-            { IngredientsIds.Add(ingredientOptionViewModel.Id); }
-        }
-
         existingRecipe.Name = editRecipeViewModel.Name;
         existingRecipe.PreparationMinutes = editRecipeViewModel.PreparationMinutes;
 
         existingRecipe.RecipeIngredients.Clear();
 
-        foreach (var ingredientId in IngredientsIds)
+        foreach (var ingredientId in ingredientsIds)
         {
             var ri = new RecipeIngredient
             {
