@@ -19,8 +19,7 @@ public abstract class IntegrationTest : IDisposable
         factory.ResetDatabase();
     }
 
-
-    public void Dispose(bool dispose)
+    public void Dispose()
     {
         Client.Dispose();
         factory.Dispose();
