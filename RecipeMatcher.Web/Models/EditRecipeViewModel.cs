@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
+// MME: Declare Type in a namespace
 public class EditRecipeViewModel
 {
     public int Id { get; set; }

@@ -1,5 +1,6 @@
 namespace RecipeMatcher.Web.Tests;
 
+// MME: Match filename with classname
 public abstract class IntegrationTest : IDisposable
 {
     private readonly CustomWebApplicationFactory factory = new();
@@ -18,7 +19,8 @@ public abstract class IntegrationTest : IDisposable
         factory.ResetDatabase();
     }
 
-    public void Dispose()
+
+    public void Dispose(bool dispose)
     {
         Client.Dispose();
         factory.Dispose();

@@ -6,7 +6,7 @@ public class SelectIngredientsViewModel
 
     [Required]
     [StringLength(100)]
-    public string Name { get; set; } = "";
+    public string Name { get; set; } = "";// MME: prefer `required` over ` = "";`
 
     public bool Selected { get; set; } = false;
 }

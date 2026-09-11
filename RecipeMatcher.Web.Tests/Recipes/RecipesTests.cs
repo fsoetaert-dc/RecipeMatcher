@@ -94,11 +94,12 @@ public class RecipesTests : IntegrationTest
     [Fact]
     public async Task EditRecipeAsyncUpdatesRecipe()
     {
-        var r1 =new Recipe
-            {
-                Name = "Lasagna",
-                PreparationMinutes = 45
-            };
+        // MME: use human-readable variable names
+        var r1 = new Recipe
+        {
+            Name = "Lasagna",
+            PreparationMinutes = 45
+        };
 
         Writer.Seed(db =>
         {
