@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 
-public class SelectIngredientsViewModel
+namespace RecipeMatcher.Web.Models;
+
+public class SelectIngredientViewModel
 {
     public int Id { get; set; }
 
     [Required]
     [StringLength(100)]
-    public string Name { get; set; } = "";// MME: prefer `required` over ` = "";`
+    public required string Name { get; set; }
 
     public bool Selected { get; set; } = false;
 }

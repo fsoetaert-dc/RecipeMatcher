@@ -1,5 +1,4 @@
-using RecipeMatcher.Web.Models;
-// MME: Declare Type in a namespace
+namespace RecipeMatcher.Web.Models;
 public class MatchedRecipe
 {
     public int Id { get; set; }

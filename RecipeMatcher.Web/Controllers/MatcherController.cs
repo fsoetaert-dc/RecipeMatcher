@@ -1,6 +1,3 @@
-// MME: Remove unused namespaces
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeMatcher.Web.Data;
@@ -22,7 +19,7 @@ public class MatcherController : Controller
     {
         var ingredients = await _dbContext.Ingredients
             .OrderBy(i => i.Name)
-            .Select(i => new SelectIngredientsViewModel
+            .Select(i => new SelectIngredientViewModel
             {
                 Id = i.Id,
                 Name = i.Name

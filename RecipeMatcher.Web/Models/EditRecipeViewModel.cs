@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-// MME: Declare Type in a namespace
+
+namespace RecipeMatcher.Web.Models;
 public class EditRecipeViewModel
 {
     public int Id { get; set; }
