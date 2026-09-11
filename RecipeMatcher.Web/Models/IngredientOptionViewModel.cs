@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+// MME: Remove unused namespaces
 using RecipeMatcher.Web.Models;
-
+// MME: Declare Type in a namespace
 public class IngredientOptionViewModel
 {
     public int Id { get; set; }

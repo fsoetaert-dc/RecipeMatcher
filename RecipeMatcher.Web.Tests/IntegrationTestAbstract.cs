@@ -1,5 +1,6 @@
 namespace RecipeMatcher.Web.Tests;
 
+// MME: Match filename with classname
 public abstract class IntegrationTest : IDisposable
 {
     private readonly CustomWebApplicationFactory factory = new();

@@ -8,7 +8,7 @@ public class Recipe
 
     [Required]
     [StringLength(100)]
-    public string Name { get; set; } = "";
+    public string Name { get; set; } = "";// MME: prefer `required` over ` = "";`
 
     [Range(1, 480)]
     public int PreparationMinutes { get; set; }
