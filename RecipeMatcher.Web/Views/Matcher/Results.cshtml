@@ -1,0 +1,22 @@
+@model MatchedRecipesViewModel
+
+<div asp-controller="Matcher" asp-action="Results" method="post">
+
+<h3>Selected Ingredients</h3>
+
+<h3>Found Recipes</h3>
+@foreach (var recipe in @Model.MatcherRecipes)
+{
+    <strong "Name">@recipe.Name</strong>
+    <p "Preparation Time">Preparation time: @recipe.PreparationMinutes minutes</p>
+
+    @foreach (var recipeIngredient in @recipe.RecipeIngredients)
+    {
+    <li>
+        <span>@recipeIngredient.Ingredient.Name</span>
+    </li> 
+    }
+
+}
+
+</div>

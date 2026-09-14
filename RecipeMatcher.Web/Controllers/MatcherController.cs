@@ -30,19 +30,36 @@ public class MatcherController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(int[]? ingredientIds)
+    public async Task<IActionResult> Results(int[]? ingredientIds)
     {
-        if (ingredientIds == null)
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        if (ingredientIds == null || ingredientIds.Length == 0)
         {
             return BadRequest();
         }
 
         var recipes = await _dbContext.Recipes
-            .Select(r => r.RecipeIngredients
+            .Include(r => r.RecipeIngredients)
+            .ThenInclude(ri => ri.Ingredient)
+            .Where(r => r.RecipeIngredients
                 .Any(ri => ingredientIds
                     .Contains(ri.IngredientId)))
             .ToListAsync();
 
-        return View(recipes);
+        var  matchedRecipesViewModel = new MatchedRecipesViewModel
+        {
+            Name = "Results",
+            SelectedIngredients = await _dbContext.Ingredients
+                .Where(i => ingredientIds
+                    .Contains(i.Id))
+                .ToListAsync(),
+            MatcherRecipes = recipes
+        };
+
+        return View(matchedRecipesViewModel);
     }
 }
